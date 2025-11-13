@@ -97,6 +97,11 @@ export async function fetchAccountInfoExternal() {
   return data.user_info
 }
 
+export async function fetchSeriesCategoriesExternal() {
+  const data = await externalFetch<SeriesResponse>("get_series_categories")
+  return data
+}
+
 /**
  * Fetch series list for a category.
  */

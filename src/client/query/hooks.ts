@@ -4,6 +4,13 @@ import { useQuery, useQueries, QueryClient } from "@tanstack/react-query"
 /**
  * Fetch function hitting composite endpoint.
  */
+export async function fetchSeriesCategories() {
+  const url = `/api/series/categories`
+  const res = await fetch(url)
+  if (!res.ok) throw new Error("Failed to fetch series categories")
+  return res.json() as Promise<string[]>
+}
+
 async function fetchSeriesBatch(categories: string[]) {
   const url = `/api/series?categories=${categories.join(",")}`
   const res = await fetch(url)
@@ -14,6 +21,13 @@ async function fetchSeriesBatch(categories: string[]) {
 async function fetchSingleSeries(category: string) {
   const data = await fetchSeriesBatch([category])
   return data[category]
+}
+
+export function useSeriesCategories() {
+  return useQuery({
+    queryKey: ["series", "categories"],
+    queryFn: fetchSeriesCategories,
+  })
 }
 
 /**

@@ -11,7 +11,10 @@
 
 import { unstable_cache, revalidateTag } from "next/cache"
 import { getCache, buildKey } from "@/server/cache"
-import { fetchSeriesExternal } from "@/server/spark"
+import {
+  fetchSeriesCategoriesExternal,
+  fetchSeriesExternal,
+} from "@/server/spark"
 
 const DEFAULT_CATEGORY = "X"
 
@@ -19,6 +22,19 @@ function ttl(): number {
   const raw = process.env.CACHE_TTL_SECONDS
   const n = raw ? parseInt(raw, 10) : 300
   return Number.isFinite(n) && n > 0 ? n : 300
+}
+
+export async function getSeriesCategoriesRaw() {
+  const cache = getCache()
+  const key = buildKey(["series", "categories"])
+  const cached = await cache.get(key)
+  if (cached) {
+    console.log(`Cache hit for key: ${key}`)
+    return cached
+  }
+  const data = await fetchSeriesCategoriesExternal()
+  await cache.set(key, data, ttl())
+  return data
 }
 
 /**
@@ -78,6 +94,22 @@ function shouldSkipIncremental(categoryId: string): boolean {
   // Always skip default category to avoid large payload hitting 2MB limit
   if (categoryId === DEFAULT_CATEGORY) return true
   return SKIP_LIST.includes(categoryId)
+}
+
+export async function getSeriesCategories() {
+  if (shouldSkipIncremental("categories")) {
+    // Use inner cache only (memory/redis) without unstable_cache to avoid size limits.
+    return getSeriesCategoriesRaw()
+  }
+  const wrapped = unstable_cache(
+    async () => getSeriesCategoriesRaw(),
+    ["series", "categories"],
+    {
+      revalidate: ttl(),
+      tags: ["series", "series:categories"],
+    }
+  )
+  return wrapped()
 }
 
 export function getSeries(categoryId: string = DEFAULT_CATEGORY) {

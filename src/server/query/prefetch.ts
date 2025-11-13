@@ -5,7 +5,18 @@
  * Keep heavy data merging server-side before hydration to reduce client work.
  */
 import { QueryClient, dehydrate } from "@tanstack/react-query"
-import { getSeriesBatch, getSeries } from "@/server/series"
+import {
+  getSeriesCategoriesRaw,
+  getSeriesBatch,
+  getSeries,
+} from "@/server/series"
+
+export async function prefetchSeriesCategories() {
+  const qc = new QueryClient()
+  const data = await getSeriesCategoriesRaw()
+  qc.setQueryData(["series", "categories"], data)
+  return dehydrate(qc)
+}
 
 export async function prefetchSeriesBatch(categories: string[]) {
   const qc = new QueryClient()
