@@ -1,16 +1,8 @@
 "use client"
 
-import { useSeriesBatch } from "@/client/query/hooks"
 import s from "./styles.module.css"
-import Image from "next/image"
 
-interface Props {
-  categories: string[]
-}
-
-export default function HomeClient({ categories }: Props) {
-  const { data, isLoading, error } = useSeriesBatch(categories)
-
+export default function HomeClient() {
   return (
     <>
       <div className={s.intro}>
@@ -34,19 +26,6 @@ export default function HomeClient({ categories }: Props) {
           </a>{" "}
           center.
         </p>
-      </div>
-      {isLoading && <p>Loading series...</p>}
-      {error && <p>Error loading series.</p>}
-      {!isLoading && !error && <pre>{JSON.stringify(data, null, 2)}</pre>}
-      <div style={{ marginTop: 24 }}>
-        <Image
-          className={s.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
       </div>
     </>
   )
