@@ -36,7 +36,6 @@ const dehydrated: DehydratedState | null = await (async () => {
 export default async function Home() {
   return (
     <div className={s.page}>
-      ~
       <main className={s.main}>
         <Image
           className={s.logo}
