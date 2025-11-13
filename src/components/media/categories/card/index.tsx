@@ -14,7 +14,7 @@ export default function MediaCategoryCard({
 }: MediaCategoryCardProps) {
   const { category_id, category_name } = category
   return (
-    <Link href={`/category/${category_id}`} className={s.card}>
+    <Link href={`/series/category/${category_id}`} className={s.card}>
       <h3 className={s.name}>{category_name}</h3>
       <p className={s.id}>ID: {category_id}</p>
     </Link>

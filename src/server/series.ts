@@ -29,7 +29,7 @@ export async function getSeriesCategoriesRaw() {
   const key = buildKey(["series", "categories"])
   const cached = await cache.get(key)
   if (cached) {
-    console.log(`Cache hit for key: ${key}`)
+    // console.log(`Cache hit for key: ${key}`)
     return cached
   }
   const data = await fetchSeriesCategoriesExternal()
@@ -45,7 +45,7 @@ export async function getSeriesRaw(categoryId: string) {
   const key = buildKey(["series", categoryId])
   const cached = await cache.get(key)
   if (cached) {
-    console.log(`Cache hit for key: ${key}`)
+    // console.log(`Cache hit for key: ${key}`)
     return cached
   }
   const data = await fetchSeriesExternal(categoryId)

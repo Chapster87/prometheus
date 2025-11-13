@@ -6,7 +6,7 @@ interface Props {
   categories: string[]
 }
 
-export default function ExampleClient({ categories }: Props) {
+export default function SeriesClient({ categories }: Props) {
   const { data, isLoading, error } = useSeriesBatch(categories)
 
   return (
