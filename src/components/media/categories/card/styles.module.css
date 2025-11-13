@@ -1,0 +1,35 @@
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: var(--color-black);
+  transition: all 0.6s ease 0s;
+  aspect-ratio: 5 / 3;
+  position: relative;
+  z-index: 1;
+  text-decoration: none;
+}
+
+.card:hover {
+  transform: scale3d(1.1, 1.1, 1) translateZ(0) perspective(500px);
+  transform-origin: 50% 50%;
+  z-index: 10;
+}
+
+.name {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--color-white);
+  text-align: center;
+  text-decoration: none;
+}
+
+.id {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 12px;
+  color: var(--color-grey-500);
+}
