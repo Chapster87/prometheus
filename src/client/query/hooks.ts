@@ -92,3 +92,26 @@ export function useSeriesInfo(seriesId: string) {
     queryFn: () => fetchSeriesInfo(seriesId),
   })
 }
+
+/**
+ * TMDB series (TV show) info fetch.
+ */
+async function fetchTmdbSeriesInfo(tmdbId: string): Promise<unknown> {
+  if (!tmdbId) {
+    throw new Error("Missing tmdbId")
+  }
+  const res = await fetch(`/api/series/tmdb?id=${encodeURIComponent(tmdbId)}`)
+  if (!res.ok) throw new Error("Failed to fetch TMDB series info")
+  return res.json() as Promise<unknown>
+}
+
+/**
+ * Hook for TMDB series info.
+ */
+export function useTmdbSeriesInfo(tmdbId: string | undefined) {
+  return useQuery({
+    queryKey: ["tmdbSeriesInfo", tmdbId || ""],
+    queryFn: () => fetchTmdbSeriesInfo(tmdbId || ""),
+    enabled: !!tmdbId,
+  })
+}
