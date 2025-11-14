@@ -20,6 +20,16 @@ const SIZE_LIMIT_BYTES = 1.8 * 1024 * 1024
  * Large payloads skip hydration to reduce response size and avoid edge cache limits.
  */
 
+export async function generateMetadata({ params }: { params: CategoryParams }) {
+  const resolvedParams = await params
+  const categoryId = resolvedParams?.id
+    ? resolvedParams.id.trim()
+    : "Unknown Category"
+  return {
+    title: `Series Category - ${categoryId}`,
+  }
+}
+
 type CategoryParams = { id?: string; status?: string; value?: string }
 export default async function Series({
   params,

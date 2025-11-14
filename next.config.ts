@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  images: {
+    domains: ["artworks.thetvdb.com"],
+  },
   async redirects() {
     return [
       // {

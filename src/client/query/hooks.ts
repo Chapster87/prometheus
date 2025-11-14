@@ -23,13 +23,21 @@ async function fetchSeriesBatch(
   categories: string[]
 ): Promise<SeriesBatchResponse> {
   const url = `/api/series?categories=${categories.join(",")}`
-  const res = await fetch(url)
-  if (!res.ok) throw new Error("Failed to fetch series batch")
-  const json = await res.json()
-  if (categories.length === 1) {
-    return json as SeriesWrapper
+  try {
+    const res = await fetch(url)
+    if (!res.ok) {
+      console.error("Failed to fetch series batch:", res.status, res.statusText)
+      throw new Error("Failed to fetch series batch")
+    }
+    const json = await res.json()
+    if (categories.length === 1) {
+      return json as SeriesWrapper
+    }
+    return json as Record<string, SeriesWrapper>
+  } catch (error) {
+    console.error("Error in fetchSeriesBatch:", error)
+    return {} as Record<string, SeriesWrapper> // Return empty object as fallback
   }
-  return json as Record<string, SeriesWrapper>
 }
 
 async function fetchSingleSeries(category: string): Promise<SeriesWrapper> {
@@ -74,6 +82,7 @@ export function useSeriesBatch(categories: string[]) {
   return useQuery({
     queryKey: ["seriesBatch", canonical.sort()],
     queryFn: () => fetchSeriesBatch(canonical),
+    staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
   })
 }
 
