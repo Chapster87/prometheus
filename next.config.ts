@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ["artworks.thetvdb.com"],
+    domains: ["artworks.thetvdb.com", "image.tmdb.org"],
   },
   async redirects() {
     return [

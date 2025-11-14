@@ -1,8 +1,10 @@
 import { ReactQueryProvider } from "@/client/query/Provider"
 import { getSeriesInfoRaw, getSeriesInfo } from "@/server/series"
+import { getTmdbSeriesInfo } from "@/server/tmdb"
 import type { DehydratedState } from "@tanstack/react-query"
 import { QueryClient, dehydrate } from "@tanstack/react-query"
 import SeriesClient from "./detail.client"
+import { SeriesDetails } from "@/types/series"
 import { notFound } from "next/navigation"
 import s from "./styles.module.css"
 
@@ -32,6 +34,7 @@ export default async function SeriesInfo({
   }
 
   let dehydrated: DehydratedState | null = null
+  let tmdbIdForClient: string | null = null
 
   try {
     // Probe size (avoid unstable_cache during decision).
@@ -44,6 +47,25 @@ export default async function SeriesInfo({
 
       const qc = new QueryClient()
       qc.setQueryData(["seriesInfo", seriesId], cachedData)
+
+      // Derive TMDB id from XC payload (string). XC payload structure assumed: cachedData.info.tmdb
+      const tmdbCredsAvailable = !!(
+        process.env.TMDB_API_READ_ACCESS_TOKEN || process.env.TMDB_API_KEY
+      )
+      const tmdbId =
+        typeof (cachedData as SeriesDetails)?.info?.tmdb === "string"
+          ? (cachedData as SeriesDetails).info.tmdb.trim()
+          : null
+      if (tmdbId && tmdbCredsAvailable) {
+        try {
+          const tmdbData = await getTmdbSeriesInfo(tmdbId)
+          qc.setQueryData(["tmdbSeriesInfo", tmdbId], tmdbData)
+          tmdbIdForClient = tmdbId
+        } catch (e) {
+          console.warn("TMDB prefetch failed; skipping hydration", e)
+        }
+      }
+
       dehydrated = dehydrate(qc)
     } else {
       console.warn(
@@ -58,7 +80,10 @@ export default async function SeriesInfo({
     <div className={`page`}>
       <main className={`main`}>
         <ReactQueryProvider initialState={dehydrated}>
-          <SeriesClient seriesId={seriesId} />
+          <SeriesClient
+            seriesId={seriesId}
+            tmdbId={tmdbIdForClient || undefined}
+          />
         </ReactQueryProvider>
       </main>
     </div>

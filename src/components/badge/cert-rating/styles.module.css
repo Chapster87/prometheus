@@ -1,0 +1,14 @@
+.certRatingBadge {
+  background-color: transparent;
+  border: 2px solid var(--color-white);
+  border-radius: 8px;
+  color: var(--color-white);
+  padding: 4px 8px;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.certRatingBadge.dark {
+  color: var(--color-black);
+  border-color: var(--color-black);
+}

@@ -1,4 +1,6 @@
 :root {
+  --container-max-width: 1600px;
+
   --color-white: #ffffff;
   --color-grey-100: #f8f9fa;
   --color-grey-200: #e9ecef;
