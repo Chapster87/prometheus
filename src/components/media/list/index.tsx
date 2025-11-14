@@ -8,7 +8,6 @@ export interface MediaListData {
 }
 
 export default function MediaList({ mediaData }: { mediaData: MediaListData }) {
-  console.log("MediaList mediaData:", mediaData)
   const { categoryName, items } = mediaData || {}
 
   return (

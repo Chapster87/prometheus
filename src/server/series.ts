@@ -14,6 +14,7 @@ import { getCache, buildKey } from "@/server/cache"
 import {
   fetchSeriesCategoriesExternal,
   fetchSeriesExternal,
+  fetchSeriesInfoExternal,
 } from "@/server/spark"
 
 const DEFAULT_CATEGORY = "X"
@@ -76,6 +77,18 @@ export async function getSeriesRaw(categoryId: string) {
     ? findCategoryName(categories as SeriesCategory[], categoryId)
     : null
   const data: SeriesWrapper = { categoryId, categoryName, items }
+  await cache.set(key, data, ttl())
+  return data
+}
+
+export async function getSeriesInfoRaw(seriesId: string) {
+  const cache = getCache()
+  const key = buildKey(["seriesInfo", seriesId])
+  const cached = await cache.get(key)
+  if (cached) {
+    return cached
+  }
+  const data = await fetchSeriesInfoExternal(seriesId)
   await cache.set(key, data, ttl())
   return data
 }
@@ -167,4 +180,19 @@ export async function getSeriesBatch(categories: string[]) {
     )
   )
   return Object.fromEntries(unique.map((c, i) => [c, results[i]]))
+}
+
+export async function getSeriesInfo(seriesId: string) {
+  if (shouldSkipIncremental(seriesId)) {
+    return getSeriesInfoRaw(seriesId)
+  }
+  const wrapped = unstable_cache(
+    async () => getSeriesInfoRaw(seriesId),
+    ["seriesInfo", seriesId],
+    {
+      revalidate: ttl(),
+      tags: ["seriesInfo", `seriesInfo:${seriesId}`],
+    }
+  )
+  return wrapped()
 }

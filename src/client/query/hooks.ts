@@ -40,6 +40,14 @@ async function fetchSingleSeries(category: string): Promise<SeriesWrapper> {
   return (data as Record<string, SeriesWrapper>)[category]
 }
 
+async function fetchSeriesInfo(seriesId: string): Promise<unknown> {
+  const data = await fetch(
+    `/api/series/info?id=${encodeURIComponent(seriesId)}`
+  )
+  if (!data.ok) throw new Error("Failed to fetch series info")
+  return data.json() as Promise<unknown>
+}
+
 export function useSeriesCategories() {
   return useQuery({
     queryKey: ["series", "categories"],
@@ -66,5 +74,12 @@ export function useSeriesBatch(categories: string[]) {
   return useQuery({
     queryKey: ["seriesBatch", canonical.sort()],
     queryFn: () => fetchSeriesBatch(canonical),
+  })
+}
+
+export function useSeriesInfo(seriesId: string) {
+  return useQuery({
+    queryKey: ["seriesInfo", seriesId],
+    queryFn: () => fetchSeriesInfo(seriesId),
   })
 }

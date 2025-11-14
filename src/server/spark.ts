@@ -111,3 +111,15 @@ export async function fetchSeriesExternal(categoryId: string) {
   })
   return data
 }
+
+export async function fetchSeriesInfoExternal(seriesId: string) {
+  if (!seriesId) {
+    const message = `Vod Id not defined`
+    throw new Error(message)
+  }
+  const data = await externalFetch<SeriesResponse>("get_series_info", {
+    series_id: seriesId,
+  })
+
+  return data
+}
