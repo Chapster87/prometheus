@@ -18,6 +18,28 @@ import {
 
 const DEFAULT_CATEGORY = "X"
 
+export interface SeriesWrapper {
+  categoryId: string
+  categoryName: string | null
+  items: unknown
+}
+
+export interface SeriesCategory {
+  category_id: string
+  category_name: string
+  parent_id?: number
+}
+
+function findCategoryName(
+  categories: SeriesCategory[],
+  categoryId: string
+): string | null {
+  const match = categories.find(
+    (c) => String(c.category_id) === String(categoryId)
+  )
+  return match ? match.category_name : null
+}
+
 function ttl(): number {
   const raw = process.env.CACHE_TTL_SECONDS
   const n = raw ? parseInt(raw, 10) : 300
@@ -43,12 +65,17 @@ export async function getSeriesCategoriesRaw() {
 export async function getSeriesRaw(categoryId: string) {
   const cache = getCache()
   const key = buildKey(["series", categoryId])
-  const cached = await cache.get(key)
-  if (cached) {
-    // console.log(`Cache hit for key: ${key}`)
-    return cached
+  const cachedRaw = await cache.get(key)
+  if (cachedRaw) {
+    return cachedRaw as SeriesWrapper
   }
-  const data = await fetchSeriesExternal(categoryId)
+  const items = await fetchSeriesExternal(categoryId)
+  // Reuse cached categories (inner cache); avoids extra external request.
+  const categories = await getSeriesCategoriesRaw()
+  const categoryName = Array.isArray(categories)
+    ? findCategoryName(categories as SeriesCategory[], categoryId)
+    : null
+  const data: SeriesWrapper = { categoryId, categoryName, items }
   await cache.set(key, data, ttl())
   return data
 }

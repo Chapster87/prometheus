@@ -22,7 +22,10 @@ export async function GET(req: Request) {
 
     const payload = await getSeriesBatch(categories)
 
-    return new NextResponse(JSON.stringify(payload), {
+    // Conditional single-category response: unwrap inner object
+    const body = categories.length === 1 ? payload[categories[0]] : payload
+
+    return new NextResponse(JSON.stringify(body), {
       headers: {
         "Content-Type": "application/json",
         // CDN caching: 5 min fresh, allow clients to use stale for +10 min while revalidating

@@ -1,5 +1,5 @@
 "use client"
-import { useQuery, useQueries, QueryClient } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 
 /**
  * Fetch function hitting composite endpoint.
@@ -11,16 +11,33 @@ export async function fetchSeriesCategories() {
   return res.json() as Promise<string[]>
 }
 
-async function fetchSeriesBatch(categories: string[]) {
+interface SeriesWrapper {
+  categoryId: string
+  categoryName: string | null
+  items: unknown
+}
+
+type SeriesBatchResponse = SeriesWrapper | Record<string, SeriesWrapper>
+
+async function fetchSeriesBatch(
+  categories: string[]
+): Promise<SeriesBatchResponse> {
   const url = `/api/series?categories=${categories.join(",")}`
   const res = await fetch(url)
   if (!res.ok) throw new Error("Failed to fetch series batch")
-  return res.json() as Promise<Record<string, unknown>>
+  const json = await res.json()
+  if (categories.length === 1) {
+    return json as SeriesWrapper
+  }
+  return json as Record<string, SeriesWrapper>
 }
 
-async function fetchSingleSeries(category: string) {
+async function fetchSingleSeries(category: string): Promise<SeriesWrapper> {
   const data = await fetchSeriesBatch([category])
-  return data[category]
+  if (data && typeof data === "object" && "items" in (data as SeriesWrapper)) {
+    return data as SeriesWrapper
+  }
+  return (data as Record<string, SeriesWrapper>)[category]
 }
 
 export function useSeriesCategories() {

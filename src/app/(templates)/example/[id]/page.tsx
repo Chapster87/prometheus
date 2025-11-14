@@ -45,9 +45,7 @@ export default async function Series({
 
       const qc = new QueryClient()
       qc.setQueryData(["series", categoryId], cachedData)
-      qc.setQueryData(["seriesBatch", [categoryId].sort()], {
-        [categoryId]: cachedData,
-      })
+      qc.setQueryData(["seriesBatch", [categoryId].sort()], cachedData)
       dehydrated = dehydrate(qc)
     } else {
       console.warn(
@@ -60,7 +58,7 @@ export default async function Series({
 
   return (
     <div className={`page`}>
-      <main className={s.main}>
+      <main className={`main`}>
         <ReactQueryProvider initialState={dehydrated}>
           <SeriesClient categories={categories} />
         </ReactQueryProvider>

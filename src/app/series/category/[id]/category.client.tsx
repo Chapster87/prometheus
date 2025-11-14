@@ -1,6 +1,8 @@
 "use client"
 
 import { useSeriesBatch } from "@/client/query/hooks"
+import MediaList from "@/components/media/list"
+import { MediaListData } from "@/components/media/list"
 
 interface Props {
   categories: string[]
@@ -13,7 +15,7 @@ export default function SeriesClient({ categories }: Props) {
     <>
       {isLoading && <p>Loading series...</p>}
       {error && <p>Error loading series.</p>}
-      {!isLoading && !error && <pre>{JSON.stringify(data, null, 2)}</pre>}
+      {!isLoading && !error && <MediaList mediaData={data as MediaListData} />}
     </>
   )
 }

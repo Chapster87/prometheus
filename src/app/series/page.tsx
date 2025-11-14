@@ -30,7 +30,7 @@ const dehydrated: DehydratedState | null = await (async () => {
 export default async function Series() {
   return (
     <div className={`page`}>
-      <main className={s.main}>
+      <main className={`main`}>
         <ReactQueryProvider initialState={dehydrated}>
           <SeriesClient />
         </ReactQueryProvider>

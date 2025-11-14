@@ -4,8 +4,8 @@ import s from "./styles.module.css"
 
 export default async function Home() {
   return (
-    <div className={s.page}>
-      <main className={s.main}>
+    <div className={`page`}>
+      <main className={`main`}>
         <Image
           className={s.logo}
           src="/next.svg"

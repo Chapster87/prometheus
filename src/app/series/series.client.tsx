@@ -1,18 +1,13 @@
 "use client"
 
 import { useSeriesCategories } from "@/client/query/hooks"
+import { SeriesCategory } from "@/types/series"
 import MediaCategories from "@/components/media/categories"
-
-interface Category {
-  category_id: string
-  category_name: string
-  parent_id: number
-}
 
 export default function SeriesClient() {
   const { data, isLoading, error } = useSeriesCategories()
 
-  const categories: Category[] =
+  const categories: SeriesCategory[] =
     Array.isArray(data) &&
     data.every(
       (item) =>
@@ -22,7 +17,7 @@ export default function SeriesClient() {
         "category_name" in item &&
         "parent_id" in item
     )
-      ? (data as Category[])
+      ? (data as SeriesCategory[])
       : []
 
   return (

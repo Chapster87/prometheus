@@ -26,12 +26,14 @@ export default async function Series({
 }: {
   params: Promise<CategoryParams>
 }) {
-  const resolved = await params
-  const categoryId = resolved?.id ? resolved.id.trim() : null
+  const resolvedParams = await params
+
+  const categoryId = resolvedParams?.id ? resolvedParams.id.trim() : null
   if (!categoryId) {
     console.warn("Missing category id; returning 404")
     notFound()
   }
+
   const categories = [categoryId]
 
   let dehydrated: DehydratedState | null = null
@@ -47,9 +49,7 @@ export default async function Series({
 
       const qc = new QueryClient()
       qc.setQueryData(["series", categoryId], cachedData)
-      qc.setQueryData(["seriesBatch", [categoryId].sort()], {
-        [categoryId]: cachedData,
-      })
+      qc.setQueryData(["seriesBatch", [categoryId].sort()], cachedData)
       dehydrated = dehydrate(qc)
     } else {
       console.warn(
@@ -62,7 +62,7 @@ export default async function Series({
 
   return (
     <div className={`page`}>
-      <main className={s.main}>
+      <main className={`main`}>
         <ReactQueryProvider initialState={dehydrated}>
           <SeriesClient categories={categories} />
         </ReactQueryProvider>
