@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import Header from "@/components/header"
 import "@/styles/globals.css"
+import BreakpointIndicator from "@/components/breakpoint-indicator"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <BreakpointIndicator />
         <Header />
         {children}
       </body>

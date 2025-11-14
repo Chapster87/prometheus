@@ -1,0 +1,136 @@
+.breakpointIndicator {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100000;
+  display: flex;
+  width: 30px;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-white);
+  padding-top: 2.5px;
+  padding-bottom: 2.5px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--color-black);
+
+  @media (--viewport-xxs-up) {
+    background-color: red;
+  }
+
+  @media (--viewport-xs-up) {
+    background-color: orange;
+  }
+
+  @media (--viewport-sm-up) {
+    background-color: yellow;
+  }
+
+  @media (--viewport-md-up) {
+    background-color: green;
+    color: var(--color-white);
+  }
+
+  @media (--viewport-lg-up) {
+    background-color: blue;
+    color: var(--color-white);
+  }
+
+  @media (--viewport-xl-up) {
+    background-color: indigo;
+    color: var(--color-white);
+  }
+
+  @media (--viewport-2xl-up) {
+    background-color: violet;
+    color: var(--color-black);
+  }
+}
+
+.labelAll {
+  display: block;
+
+  @media (--viewport-xxs-up) {
+    display: none;
+  }
+}
+
+.labelXxs {
+  display: none;
+
+  @media (--viewport-xxs-up) and (--viewport-xs) {
+    display: block;
+  }
+
+  @media (--viewport-xs-up) {
+    display: none;
+  }
+}
+
+.labelXs {
+  display: none;
+
+  @media (--viewport-xs-up) and (--viewport-sm) {
+    display: block;
+  }
+
+  @media (--viewport-sm-up) {
+    display: none;
+  }
+}
+
+.labelSm {
+  display: none;
+
+  @media (--viewport-sm-up) and (--viewport-md) {
+    display: block;
+  }
+
+  @media (--viewport-md-up) {
+    display: none;
+  }
+}
+
+.labelMd {
+  display: none;
+
+  @media (--viewport-md-up) and (--viewport-lg) {
+    display: block;
+  }
+
+  @media (--viewport-lg-up) {
+    display: none;
+  }
+}
+
+.labelLg {
+  display: none;
+
+  @media (--viewport-lg-up) and (--viewport-xl) {
+    display: block;
+  }
+
+  @media (--viewport-xl-up) {
+    display: none;
+  }
+}
+
+.labelXl {
+  display: none;
+
+  @media (--viewport-xl-up) and (--viewport-2xl) {
+    display: block;
+  }
+
+  @media (--viewport-2xl-up) {
+    display: none;
+  }
+}
+
+.label2xl {
+  display: none;
+
+  @media (--viewport-2xl-up) {
+    display: block;
+  }
+}
