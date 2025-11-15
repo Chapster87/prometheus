@@ -1,0 +1,22 @@
+.tabTrigger {
+  padding: 8px 16px;
+  border: none;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: var(--color-grey-800);
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+
+  &[data-state="active"] {
+    background-color: var(--color-black);
+  }
+}
+
+.tabContent {
+  padding: 16px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  background-color: var(--color-black);
+}

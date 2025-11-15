@@ -30,14 +30,16 @@ export default function SeriesClient({ seriesId, tmdbId }: Props) {
       {xcLoading && <p>Loading series...</p>}
       {xcError && <p>Error loading series.</p>}
       {!xcLoading && !xcError && (
-        <Detail
-          seasons={seasons}
-          info={info}
-          episodes={episodes}
-          tmdb={tmdb}
-          tmdbLoading={tmdbLoading}
-          tmdbError={Boolean(tmdbError)}
-        />
+        <>
+          {tmdbLoading && <p>Loading TMDB supplemental data...</p>}
+          {tmdbError ? <p>Failed to load TMDB data.</p> : null}
+          <Detail
+            seasons={seasons}
+            info={info}
+            episodes={episodes}
+            tmdb={tmdb}
+          />
+        </>
       )}
     </>
   )

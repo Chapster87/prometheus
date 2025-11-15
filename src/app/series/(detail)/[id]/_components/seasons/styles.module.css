@@ -1,0 +1,99 @@
+.seasonsMain {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+  padding: 16px;
+  background-color: color-mix(in srgb, var(--color-grey-900) 80%, transparent);
+  color: var(--color-white);
+  border-radius: 8px;
+}
+
+.episodeList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+}
+
+.episodeCard {
+  background-color: var(--color-grey-800);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.episodeStillWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.episodeStill {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.playIconOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  color: white;
+  z-index: 2;
+}
+
+.episodeStillWrapper:hover .playIconOverlay {
+  opacity: 1;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.videoPlayer {
+  border-radius: 8px;
+  width: 100%;
+  height: auto;
+  margin-bottom: 8px;
+}
+
+.copyField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.copyInput {
+  width: 100%;
+  font-size: 15px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.copyIcon {
+  display: flex;
+  align-items: center;
+  min-width: 24px;
+  min-height: 24px;
+  position: relative;
+}
+
+.fadeIcon {
+  position: absolute;
+  transition: opacity 0.3s;
+}

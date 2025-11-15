@@ -5,6 +5,7 @@ import Text from "@/components/typography/text"
 import Image from "next/image"
 import CertRatingBadge from "@/components/badge/cert-rating"
 import MatrixDialog from "../matrix-dialog"
+import SeriesSeasons from "../seasons"
 
 import commonStyles from "@/styles/common.module.css"
 import s from "./styles.module.css"
@@ -14,12 +15,8 @@ export default function Detail({
   info,
   episodes,
   tmdb,
-  tmdbLoading,
-  tmdbError,
 }: SeriesDetails & {
   tmdb?: TmdbSeriesInfo | null
-  tmdbLoading: boolean
-  tmdbError: boolean
 }) {
   const {
     backdrop_path,
@@ -44,8 +41,6 @@ export default function Detail({
       >
         <span className={s.backdropOverlay}></span>
       </div>
-      {tmdbLoading && <p>Loading TMDB supplemental data...</p>}
-      {tmdbError ? <p>Failed to load TMDB data.</p> : null}
       {tmdb && (
         <div className={`${commonStyles.siteContainer} ${s.detailMain}`}>
           <div className={s.posterCol}>
@@ -74,6 +69,11 @@ export default function Detail({
           </div>
         </div>
       )}
+      <SeriesSeasons
+        seasons={seasons || []}
+        episodes={episodes || {}}
+        tmdbSeasons={tmdbSeasons || []}
+      />
     </div>
   )
 }
