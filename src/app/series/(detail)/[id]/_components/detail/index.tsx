@@ -4,6 +4,7 @@ import Heading from "@/components/typography/heading"
 import Text from "@/components/typography/text"
 import Image from "next/image"
 import CertRatingBadge from "@/components/badge/cert-rating"
+import MatrixDialog from "../matrix-dialog"
 
 import commonStyles from "@/styles/common.module.css"
 import s from "./styles.module.css"
@@ -20,14 +21,15 @@ export default function Detail({
   tmdbLoading: boolean
   tmdbError: boolean
 }) {
-  const [ermOpen, setErmOpen] = useState(false)
   const {
     backdrop_path,
     certification_rating,
     first_air_date,
     genres,
     name,
+    overview,
     poster_path,
+    seasons: tmdbSeasons,
     status,
     tagline,
     vote_average,
@@ -56,63 +58,19 @@ export default function Detail({
           <div className={s.infoPanel}>
             <Heading level="h1">{name}</Heading>
             <GenresList genres={genres || []} />
-            <div className={s.detailShelf}>
-              {first_air_date && (
-                <div className={s.shelfItem}>
-                  <Text>{first_air_date.slice(0, 4)}</Text>
-                </div>
-              )}
-              {certification_rating && (
-                <div className={s.shelfItem}>
-                  <CertRatingBadge rating={certification_rating || null} />
-                </div>
-              )}
-              {status && (
-                <div className={s.shelfItem}>
-                  <Text className={s.mediaStatus}>Status: {status}</Text>
-                </div>
-              )}
-            </div>
+            <DetailsShelf
+              firstAirDate={first_air_date}
+              certificationRating={certification_rating}
+              status={status}
+            />
             {vote_average && vote_average > 0 && (
-              <div className={`${s.ratingAndMatrix} ${ermOpen ? s.open : ""}`}>
-                <div className={`${s.ratingAndMatrixInner}`}>
-                  <div className={`${s.communityRating}`}>
-                    <Image
-                      src={`/tmdb-short.svg`}
-                      alt="TMDB Rating"
-                      width={65}
-                      height={28}
-                    />
-                    <Text className={s.ratingAverage}>
-                      {(Math.round(vote_average * 10) / 10).toFixed(1)}
-                    </Text>
-                  </div>
-                  {!ermOpen ? (
-                    <button
-                      className="btn btn-sm btn-outline btn-primary"
-                      onClick={() => setErmOpen(true)}
-                    >
-                      View Episode Rating Matrix
-                    </button>
-                  ) : (
-                    <button
-                      className="btn btn-sm btn-outline btn-primary"
-                      onClick={() => setErmOpen(false)}
-                    >
-                      Close Episode Rating Matrix
-                    </button>
-                  )}
-                </div>
-
-                {/* <div className="rating-matrix-outer relative">
-                  <div className='absolute'>
-                    <EpisodeRatingMatrix seasons={mediaData.seasons} />
-                  </div>
-                </div> */}
-              </div>
+              <RatingsBadgeMatrix
+                ratingAvg={vote_average}
+                seasons={tmdbSeasons}
+              />
             )}
 
-            <Text>{tmdb.overview}</Text>
+            <Text>{overview}</Text>
           </div>
         </div>
       )}
@@ -153,6 +111,63 @@ function GenresList({ genres }: { genres: { id: number; name: string }[] }) {
           index + 1 !== genres.length ? `${genre.name}, ` : genre.name
         return <span key={genre.id}>{output}</span>
       })}
+    </div>
+  )
+}
+
+function DetailsShelf({
+  firstAirDate,
+  certificationRating,
+  status,
+}: {
+  firstAirDate?: string | null
+  certificationRating?: string | null
+  status?: string | null
+}) {
+  return (
+    <div className={s.detailShelf}>
+      {firstAirDate && (
+        <div className={s.shelfItem}>
+          <Text>{firstAirDate.slice(0, 4)}</Text>
+        </div>
+      )}
+      {certificationRating && (
+        <div className={s.shelfItem}>
+          <CertRatingBadge rating={certificationRating || null} />
+        </div>
+      )}
+      {status && (
+        <div className={s.shelfItem}>
+          <Text className={s.mediaStatus}>Status: {status}</Text>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function RatingsBadgeMatrix({
+  ratingAvg,
+  seasons,
+}: {
+  ratingAvg: number
+  seasons?: TmdbSeriesInfo["seasons"]
+}) {
+  return (
+    <div className={`${s.ratingAndMatrix}`}>
+      <div className={`${s.ratingAndMatrixInner}`}>
+        <div className={`${s.communityRating}`}>
+          <Image
+            src={`/tmdb-short.svg`}
+            alt="TMDB Rating"
+            width={65}
+            height={28}
+          />
+          <Text className={s.ratingAverage}>
+            {(Math.round(ratingAvg * 10) / 10).toFixed(1)}
+          </Text>
+        </div>
+        <MatrixDialog seasons={seasons || []} />
+      </div>
     </div>
   )
 }

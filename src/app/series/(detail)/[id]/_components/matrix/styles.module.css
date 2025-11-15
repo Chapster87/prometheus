@@ -1,0 +1,47 @@
+.matrix {
+  display: flex;
+}
+
+.matrixInner {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+}
+
+.episodes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.episodeTile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  min-height: 4rem;
+  min-width: 4rem;
+  cursor: help;
+  position: relative;
+  gap: 6px;
+}
+
+.seasonEpisodeLabel {
+  text-transform: uppercase;
+  color: var(--color-black);
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-white);
+  border-radius: 4px;
+  padding: 2px 4px;
+  color: var(--color-black);
+  font-size: 16px;
+  line-height: 1;
+  font-weight: bold;
+}
