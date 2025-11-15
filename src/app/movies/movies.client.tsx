@@ -1,15 +1,15 @@
 "use client"
 
-import { useSeriesCategories } from "@/client/query/seriesHooks"
-import { SeriesCategory } from "@/types/series"
+import { useMovieCategories } from "@/client/query/moviesHooks"
+import type { MovieCategory } from "@/types/movies"
 import MediaCategories from "@/components/media/categories"
 
-const MEDIA_TYPE = "Series"
+const MEDIA_TYPE = "Movie"
 
-export default function SeriesClient() {
-  const { data, isLoading, error } = useSeriesCategories()
+export default function MoviesClient() {
+  const { data, isLoading, error } = useMovieCategories()
 
-  const categories: SeriesCategory[] =
+  const categories: MovieCategory[] =
     Array.isArray(data) &&
     data.every(
       (item) =>
@@ -19,7 +19,7 @@ export default function SeriesClient() {
         "category_name" in item &&
         "parent_id" in item
     )
-      ? (data as SeriesCategory[])
+      ? (data as MovieCategory[])
       : []
 
   return (

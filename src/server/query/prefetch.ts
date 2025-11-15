@@ -10,6 +10,7 @@ import {
   getSeriesBatch,
   getSeries,
 } from "@/server/series"
+import { getMoviesCategoriesRaw } from "@/server/movies"
 
 export async function prefetchSeriesCategories() {
   const qc = new QueryClient()
@@ -34,5 +35,12 @@ export async function prefetchSingleSeries(category: string) {
   const qc = new QueryClient()
   const data = await getSeries(category)
   qc.setQueryData(["series", category], data)
+  return dehydrate(qc)
+}
+
+export async function prefetchMovieCategories() {
+  const qc = new QueryClient()
+  const data = await getMoviesCategoriesRaw()
+  qc.setQueryData(["movies", "categories"], data)
   return dehydrate(qc)
 }

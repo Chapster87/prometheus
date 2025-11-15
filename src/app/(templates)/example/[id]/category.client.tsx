@@ -1,6 +1,6 @@
 "use client"
 
-import { useSeriesBatch } from "@/client/query/hooks"
+import { useSeriesBatch } from "@/client/query/seriesHooks"
 
 interface Props {
   categories: string[]

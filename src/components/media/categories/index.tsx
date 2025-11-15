@@ -9,8 +9,10 @@ interface Category {
 
 export default function MediaCategories({
   categories,
+  mediaType,
 }: {
   categories: Category[]
+  mediaType: string
 }) {
   // Ensure categories is an array
   if (!Array.isArray(categories)) {
@@ -23,10 +25,14 @@ export default function MediaCategories({
 
   return (
     <>
-      <h1 className={s.title}>Series Categories</h1>
+      <h1 className={s.title}>{mediaType} Categories</h1>
       <div className={s.mediaCategories}>
         {categories.map((category) => (
-          <MediaCategoryCard key={category.category_id} category={category} />
+          <MediaCategoryCard
+            key={category.category_id}
+            category={category}
+            mediaType={mediaType}
+          />
         ))}
       </div>
     </>

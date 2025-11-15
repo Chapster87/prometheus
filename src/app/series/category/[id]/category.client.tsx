@@ -1,6 +1,6 @@
 "use client"
 
-import { useSeriesBatch } from "@/client/query/hooks"
+import { useSeriesBatch } from "@/client/query/seriesHooks"
 import MediaList from "@/components/media/list"
 import { MediaListData } from "@/components/media/list"
 

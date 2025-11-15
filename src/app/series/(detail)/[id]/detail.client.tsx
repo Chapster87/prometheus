@@ -1,6 +1,6 @@
 "use client"
 
-import { useSeriesInfo, useTmdbSeriesInfo } from "@/client/query/hooks"
+import { useSeriesInfo, useTmdbSeriesInfo } from "@/client/query/seriesHooks"
 import Detail from "./_components/detail"
 
 import { SeriesDetails, TmdbSeriesInfo } from "@/types/series"

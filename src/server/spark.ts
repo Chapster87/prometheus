@@ -86,6 +86,25 @@ interface SeriesResponse {
   // Add other known properties here
 }
 
+interface MovieCategory {
+  category_id: string
+  category_name: string
+  parent_id?: number
+}
+
+type MovieCategoryResponse = MovieCategory[]
+
+interface MovieStream {
+  stream_id: string
+  name?: string
+  title?: string
+  year?: string
+  category_id?: string
+  // Extend with other known properties if needed
+}
+
+type MovieStreamResponse = MovieStream[]
+
 /**
  * Fetch account info & basic authentication check.
  */
@@ -99,6 +118,18 @@ export async function fetchAccountInfoExternal() {
 
 export async function fetchSeriesCategoriesExternal() {
   const data = await externalFetch<SeriesResponse>("get_series_categories")
+  return data
+}
+
+export async function fetchMovieCategoriesExternal() {
+  const data = await externalFetch<MovieCategoryResponse>("get_vod_categories")
+  return data
+}
+
+export async function fetchMoviesExternal(categoryId: string) {
+  const data = await externalFetch<MovieStreamResponse>("get_vod_streams", {
+    category_id: categoryId,
+  })
   return data
 }
 
