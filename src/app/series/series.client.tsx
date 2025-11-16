@@ -4,7 +4,7 @@ import { useSeriesCategories } from "@/client/query/seriesHooks"
 import { SeriesCategory } from "@/types/series"
 import MediaCategories from "@/components/media/categories"
 
-const MEDIA_TYPE = "Series"
+const MEDIA_TYPE = "series"
 
 export default function SeriesClient() {
   const { data, isLoading, error } = useSeriesCategories()

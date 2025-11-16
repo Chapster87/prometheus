@@ -24,7 +24,7 @@ export default function SeriesClient({ seriesId, tmdbId }: Props) {
   const { seasons, info, episodes } = (xcData as SeriesDetails) || {}
   const tmdb = (tmdbData as TmdbSeriesInfo) || null
 
-  console.log("SeriesClient render", { seriesId, tmdbId, xcData, tmdbData })
+  // console.log("SeriesClient render", { seriesId, tmdbId, xcData, tmdbData })
   return (
     <>
       {xcLoading && <p>Loading series...</p>}

@@ -108,3 +108,22 @@ export function useTmdbSeriesInfo(tmdbId: string | undefined) {
     enabled: !!tmdbId,
   })
 }
+
+async function fetchTmdbSeriesLiteInfo(tmdbId: string): Promise<unknown> {
+  if (!tmdbId) {
+    throw new Error("Missing tmdbId")
+  }
+  const res = await fetch(
+    `/api/series/tmdb-lite?id=${encodeURIComponent(tmdbId)}`
+  )
+  if (!res.ok) throw new Error("Failed to fetch TMDB series lite info")
+  return res.json() as Promise<unknown>
+}
+
+export function useTmdbSeriesLiteInfo(tmdbId: string | undefined) {
+  return useQuery({
+    queryKey: ["tmdbSeriesLiteInfo", tmdbId || ""],
+    queryFn: () => fetchTmdbSeriesLiteInfo(tmdbId || ""),
+    enabled: !!tmdbId,
+  })
+}

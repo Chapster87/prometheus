@@ -7,6 +7,12 @@ interface Category {
   parent_id: number
 }
 
+function resolveTitle(mediaType: string): string {
+  const title =
+    mediaType === "series" ? "Series Categories" : "Movie Categories"
+  return title
+}
+
 export default function MediaCategories({
   categories,
   mediaType,
@@ -25,7 +31,7 @@ export default function MediaCategories({
 
   return (
     <>
-      <h1 className={s.title}>{mediaType} Categories</h1>
+      <h1 className={s.title}>{resolveTitle(mediaType)}</h1>
       <div className={s.mediaCategories}>
         {categories.map((category) => (
           <MediaCategoryCard

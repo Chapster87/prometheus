@@ -4,7 +4,7 @@ import { useMovieCategories } from "@/client/query/moviesHooks"
 import type { MovieCategory } from "@/types/movies"
 import MediaCategories from "@/components/media/categories"
 
-const MEDIA_TYPE = "Movie"
+const MEDIA_TYPE = "movies"
 
 export default function MoviesClient() {
   const { data, isLoading, error } = useMovieCategories()

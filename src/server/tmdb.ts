@@ -16,6 +16,7 @@
 
 import { unstable_cache } from "next/cache"
 import { getCache, buildKey } from "@/server/cache"
+import { TmdbLite } from "@/types/tmdbLite"
 
 const TMDB_BASE_URL = "https://api.themoviedb.org/3"
 const bearer = process.env.TMDB_API_READ_ACCESS_TOKEN
@@ -368,6 +369,80 @@ function enrichMovie(movie: TmdbMedia): TmdbMedia {
     trailers,
     media_type: "movie",
   }
+}
+
+/* --------------------------------------------------------------------------
+ * Lite (card) fetches & cache
+ * -------------------------------------------------------------------------- */
+
+function toTmdbLiteBase(
+  media: TmdbMedia,
+  tmdbId: string,
+  media_type: "movie" | "tv"
+): TmdbLite {
+  const yearSource =
+    media_type === "movie" ? media.release_date : media.first_air_date
+  const year =
+    yearSource && yearSource.length >= 4 ? yearSource.slice(0, 4) : undefined
+  const certification = extractCertification({ ...media, media_type })
+  return {
+    tmdbId,
+    poster_path: media.poster_path,
+    overview: media.overview,
+    vote_average: media.vote_average,
+    year,
+    certification_rating: certification,
+    media_type,
+  }
+}
+
+/**
+ * Minimal movie fetch for card enrichment.
+ */
+export async function fetchTmdbMovieLiteExternal(
+  tmdbId: string
+): Promise<TmdbLite> {
+  const movie = await tmdbFetch<TmdbMedia>(`/movie/${tmdbId}`, {
+    append_to_response: "release_dates",
+    language: "en-US",
+  })
+  return toTmdbLiteBase(movie, tmdbId, "movie")
+}
+
+/**
+ * Minimal show (tv) fetch for card enrichment.
+ */
+export async function fetchTmdbShowLiteExternal(
+  tmdbId: string
+): Promise<TmdbLite> {
+  const show = await tmdbFetch<TmdbMedia>(`/tv/${tmdbId}`, {
+    append_to_response: "content_ratings",
+    language: "en-US",
+  })
+  return toTmdbLiteBase(show, tmdbId, "tv")
+}
+
+/**
+ * Inner cache wrappers (no incremental) for lite data.
+ */
+export async function getTmdbMovieLiteRaw(tmdbId: string) {
+  const cache = getCache()
+  const key = buildKey(["tmdbMovieLite", tmdbId])
+  const cached = await cache.get(key)
+  if (cached) return cached as TmdbLite
+  const data = await fetchTmdbMovieLiteExternal(tmdbId)
+  await cache.set(key, data, ttl())
+  return data
+}
+
+export async function getTmdbSeriesLiteRaw(tmdbId: string) {
+  const cache = getCache()
+  const key = buildKey(["tmdbSeriesLite", tmdbId])
+  const cached = await cache.get(key)
+  if (cached) return cached as TmdbLite
+  const data = await fetchTmdbShowLiteExternal(tmdbId)
+  await cache.set(key, data, ttl())
+  return data
 }
 
 /* --------------------------------------------------------------------------

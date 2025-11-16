@@ -81,3 +81,22 @@ export function useMoviesBatch(categories: string[]) {
     staleTime: 5 * 60 * 1000,
   })
 }
+
+async function fetchTmdbMovieLiteInfo(tmdbId: string): Promise<unknown> {
+  if (!tmdbId) {
+    throw new Error("Missing tmdbId")
+  }
+  const res = await fetch(
+    `/api/movies/tmdb-lite?id=${encodeURIComponent(tmdbId)}`
+  )
+  if (!res.ok) throw new Error("Failed to fetch TMDB movie lite info")
+  return res.json() as Promise<unknown>
+}
+
+export function useTmdbMovieLiteInfo(tmdbId: string | undefined) {
+  return useQuery({
+    queryKey: ["tmdbMovieLiteInfo", tmdbId || ""],
+    queryFn: () => fetchTmdbMovieLiteInfo(tmdbId || ""),
+    enabled: !!tmdbId,
+  })
+}
