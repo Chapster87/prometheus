@@ -154,3 +154,15 @@ export async function fetchSeriesInfoExternal(seriesId: string) {
 
   return data
 }
+
+export async function fetchMovieInfoExternal(movieId: string) {
+  if (!movieId) {
+    const message = `Movie Id not defined`
+    throw new Error(message)
+  }
+  const data = await externalFetch("get_vod_info", {
+    vod_id: movieId,
+  })
+
+  return data
+}

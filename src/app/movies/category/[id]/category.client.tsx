@@ -2,12 +2,17 @@
 
 import { useMoviesBatch } from "@/client/query/moviesHooks"
 import MediaList from "@/components/media/list"
-import type { MovieWrapper } from "@/types/movies"
 import type { Series } from "@/types/series"
 import type { Movie } from "@/types/movies"
 
 interface Props {
   categories: string[]
+}
+
+interface MovieWrapper {
+  categoryName: string
+  items: Movie[]
+  categoryId?: string
 }
 
 /**

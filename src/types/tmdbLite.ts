@@ -6,4 +6,6 @@ export interface TmdbLite {
   year?: string
   certification_rating?: string | null
   media_type: "movie" | "tv"
+  title?: string
+  name?: string
 }

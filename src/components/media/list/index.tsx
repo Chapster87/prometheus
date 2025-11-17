@@ -25,8 +25,6 @@ export default function MediaList({ mediaData }: { mediaData: MediaListData }) {
     return <p>Loading media items...</p>
   }
 
-  console.log("MediaList items:", items)
-
   const sortedItems =
     sortOption === "original-order"
       ? items

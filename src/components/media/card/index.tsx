@@ -23,38 +23,54 @@ function isMovie(m: Series | Movie): m is Movie {
   return (m as Movie).stream_id !== undefined
 }
 
-function resolveTitle(media: Series | Movie): string {
-  if (isSeries(media) && media.name) return media.name
-  if (isMovie(media)) {
-    if (media.title) return media.title
-    if (media.name) return media.name
-  }
-  return "Untitled"
-}
-
-function resolvePlot(media: Series | Movie): string {
-  if (isSeries(media) && media.plot) return media.plot
-  if (isMovie(media)) {
-    return media.plot || media.description || media.overview || ""
-  }
-  return ""
-}
-
-function resolveCover(media: Series | Movie): string | null {
-  if (isSeries(media) && media.cover) return media.cover
-  if (isMovie(media)) {
-    return media.cover || media.stream_icon || media.poster || null
-  }
-  return null
-}
-
-function resolveHref(
-  mediaType: "series" | "movies",
+function resolveMediaDetails({
+  media,
+  mediaType,
+  tmdbData,
+  tmdbLoading,
+}: {
   media: Series | Movie
-): string {
-  return mediaType === "series"
-    ? `/series/${(media as Series).series_id}`
-    : `/movies/${(media as Movie).stream_id}`
+  mediaType: "series" | "movies"
+  tmdbData: TmdbLite | undefined
+  tmdbLoading: boolean
+}) {
+  // --- Title ---
+  const titleFromMedia =
+    (isSeries(media) ? media.name : media.title || media.name) || ""
+  const titleFromTmdb =
+    !tmdbLoading && tmdbData
+      ? (isSeries(media)
+          ? `${tmdbData.name} (${tmdbData.year})`
+          : `${tmdbData.title} (${tmdbData.year})`) || ""
+      : ""
+  const title = titleFromTmdb || titleFromMedia || "Untitled"
+
+  // --- Plot ---
+  const plotFromMedia =
+    (isSeries(media)
+      ? media.plot
+      : media.plot || media.description || media.overview) || ""
+  const plotFromTmdb = (!tmdbLoading && tmdbData?.overview) || ""
+  const plot = plotFromTmdb || plotFromMedia
+
+  // --- Cover ---
+  const coverFromMedia =
+    (isSeries(media)
+      ? media.cover
+      : media.cover || media.stream_icon || media.poster) || null
+  const coverFromTmdb =
+    !tmdbLoading && tmdbData?.poster_path
+      ? `https://image.tmdb.org/t/p/original/${tmdbData.poster_path}`
+      : null
+  const cover = coverFromTmdb || coverFromMedia
+
+  // --- Href ---
+  const href =
+    mediaType === "series"
+      ? `/series/${(media as Series).series_id}`
+      : `/movies/${(media as Movie).stream_id}`
+
+  return { title, plot, cover, href }
 }
 
 export default function MediaCard({ mediaType, media }: MediaCardProps) {
@@ -68,22 +84,15 @@ export default function MediaCard({ mediaType, media }: MediaCardProps) {
   const tmdbData = (
     mediaType === "series" ? seriesLite.data : movieLite.data
   ) as TmdbLite | undefined
+  const tmdbLoading =
+    mediaType === "series" ? seriesLite.isLoading : movieLite.isLoading
 
-  const title = resolveTitle(media)
-
-  let plot = resolvePlot(media)
-  if (!plot && tmdbData && (tmdbData as TmdbLite).overview) {
-    plot = (tmdbData as TmdbLite).overview || ""
-  }
-
-  let cover = resolveCover(media)
-  if (!cover && tmdbData && (tmdbData as TmdbLite).poster_path) {
-    cover = `https://image.tmdb.org/t/p/w342${
-      (tmdbData as TmdbLite).poster_path
-    }`
-  }
-
-  const href = resolveHref(mediaType, media)
+  const { title, plot, cover, href } = resolveMediaDetails({
+    media,
+    mediaType,
+    tmdbData,
+    tmdbLoading,
+  })
 
   return (
     <div className={s.mediaCard}>
@@ -93,8 +102,8 @@ export default function MediaCard({ mediaType, media }: MediaCardProps) {
             <Image
               src={cover}
               alt={title}
-              width={256}
-              height={376}
+              width={2000}
+              height={3000}
               className={s.mediaImage}
             />
           </figure>

@@ -393,6 +393,8 @@ function toTmdbLiteBase(
     year,
     certification_rating: certification,
     media_type,
+    title: media.title,
+    name: media.name,
   }
 }
 

@@ -100,3 +100,33 @@ export function useTmdbMovieLiteInfo(tmdbId: string | undefined) {
     enabled: !!tmdbId,
   })
 }
+
+async function fetchMovieInfo(movieId: string): Promise<unknown> {
+  const data = await fetch(`/api/movies/info?id=${encodeURIComponent(movieId)}`)
+  if (!data.ok) throw new Error("Failed to fetch movie info")
+  return data.json() as Promise<unknown>
+}
+
+export function useMovieInfo(movieId: string) {
+  return useQuery({
+    queryKey: ["movieInfo", movieId],
+    queryFn: () => fetchMovieInfo(movieId),
+  })
+}
+
+async function fetchTmdbMovieInfo(tmdbId: string): Promise<unknown> {
+  if (!tmdbId) {
+    throw new Error("Missing tmdbId")
+  }
+  const res = await fetch(`/api/movies/tmdb?id=${encodeURIComponent(tmdbId)}`)
+  if (!res.ok) throw new Error("Failed to fetch TMDB movie info")
+  return res.json() as Promise<unknown>
+}
+
+export function useTmdbMovieInfo(tmdbId: string | undefined) {
+  return useQuery({
+    queryKey: ["tmdbMovieInfo", tmdbId || ""],
+    queryFn: () => fetchTmdbMovieInfo(tmdbId || ""),
+    enabled: !!tmdbId,
+  })
+}
